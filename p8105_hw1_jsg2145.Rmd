@@ -7,4 +7,47 @@ output: github_document
 
 # Data Science I P8104
 
+I am in Data Science I P8104.
+
 ## HW1
+
+This is my first homework assignment.
+
+### Problem 1
+
+This is the first problem of the problem set. Load the library.
+
+```{r load library}
+library(tidyverse)
+```
+
+Here's a dataframe.
+
+```{r create a dataframe}
+df1 = tibble(
+  samp = rnorm(8),
+  samp_pos = samp > 0,
+  char_vec = list("1","2","3","4","5","6","7","8"),
+  fact_vec = factor(levels = "factor1", "factor2","factor3"))
+```
+
+Take the mean of each vector:
+
+I can take the mean of samp = `r mean(pull(df1, samp))`
+
+I can take the mean of samp_pos = `r mean(pull(df1, samp_pos))`, but it won't tell me much
+
+The mean of a character vector doesn't make sense, `r mean(pull(df1, char_vec))`
+
+Neither does one for a factor, `r mean(pull(df1, fact_vec))`
+
+```{r as.numeric, eval = FALSE}
+as.numeric(pull(df1, samp_pos))
+as.numeric(pull(df1, char_vec))
+as.numeric(pull(df1, fact_vec))
+```
+I happened to use numbers for my character vector, so they were converted to numbers. 
+
+However, my factors were characters and they did not convert to numbers.
+
+
