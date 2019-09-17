@@ -1,0 +1,10 @@
+---
+title: "p8105_hw1_jsg2145"
+author: "Jared Garfinkel"
+date: "9/17/2019"
+output: github_document
+---
+
+# Data Science I P8104
+
+## HW1
