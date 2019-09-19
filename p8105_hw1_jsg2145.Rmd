@@ -83,7 +83,9 @@ ggplot(data = df2,
        aes(x, y, color = gr_th1_fac)) +
   geom_point() +
   theme(legend.position = "top") +
-  labs(labels = c(TRUE = "Sum not greater than 1", FALSE = "Sum greater than 1"))
+  labs(
+    factor(
+      c(TRUE = "Sum not greater than 1", FALSE = "Sum greater than 1")))
   
 
 
