@@ -78,17 +78,28 @@ the standard deviation of x is `r sd(pull(df2, x))`. The proportion of cases for
 
 is `r sum(pull(df2, gr_th1))` / 500`.
 
-```{r}
-ggplot(data = df2,
+```{r Pipe}
+
+df2_good <-  df2 %>% 
+  mutate(
+    gr_th1_fac = factor(gr_th1_fac,
+      labels = c("No", "Yes")))
+
+
+ggplot(data = df2_good,
        aes(x, y, color = gr_th1_fac)) +
-  geom_point() +
-  theme(legend.position = "top") +
-  labs(
-    factor(
-      c(TRUE = "Sum not greater than 1", FALSE = "Sum greater than 1")))
+  geom_point()
+```
+
+
+
+  labs(title = "Random Normal Samples", 
+       legend(x = "topleft", 
+              legend = ifelse(
+                pull(df2, gr_th1_fac) == TRUE, "Sum not greater than 1", "Sum greater than 1")))
   
 
-
+```{r this plot works}
 with(df2, 
      plot(x, y))
 with(
@@ -98,6 +109,5 @@ with(
   filter(df2, gr_th1 == FALSE),
   points(x, y, col = 'blue'))
 legend("bottomleft", pch=1, col=c("blue","red"), legend=c("Sum not greater than 1","Sum greater than 1"))
-     
      
 ```
