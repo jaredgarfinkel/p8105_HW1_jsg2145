@@ -79,12 +79,23 @@ the standard deviation of x is `r sd(pull(df2, x))`. The proportion of cases for
 is `r sum(pull(df2, gr_th1))/500`.
 
 ```{r}
-cols <- c("blue" = "x + y <= 1", "red" )
+ggplot(data = df2,
+       aes(x = x, y = y, 
+       color = ifelse(gr_th1 == TRUE, "blue", "red"),
+       legend(legend = c("Sum not greater than 1", "Sum greater than 1")))) +
+  geom_point()
+  
 
-ggplot(data = df2, 
-       aes(x, y,
-           color = ifelse(gr_th1 == TRUE, "blue", "red"),
-           manual_fill_)) +
-  geom_point(data = df2, aes(x, y)) +
-  theme(legend.position = "top", legend.title = element_blank())
+
+with(df2, 
+     plot(x, y))
+with(
+  filter(df2, gr_th1 == TRUE),
+  points(x, y, col = 'red'))
+with(
+  filter(df2, gr_th1 == FALSE),
+  points(x, y, col = 'blue'))
+legend("bottomleft", pch=1, col=c("blue","red"), legend=c("Sum not greater than 1","Sum greater than 1"))
+     
+     
 ```
