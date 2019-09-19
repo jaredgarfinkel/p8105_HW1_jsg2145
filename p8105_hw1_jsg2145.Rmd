@@ -27,8 +27,8 @@ Here's a dataframe.
 df1 = tibble(
   samp = rnorm(8),
   samp_pos = samp > 0,
-  char_vec = list("1","2","3","4","5","6","7","8"),
-  fact_vec = factor(levels = "factor1", "factor2","factor3"))
+  char_vec = c("This", "is", "a", "column", "of", "length", "eight", "characters"),
+  fact_vec = factor(samp, levels = list("factor1", "factor2", "factor3")))
 ```
 
 Take the mean of each vector:
@@ -46,8 +46,45 @@ as.numeric(pull(df1, samp_pos))
 as.numeric(pull(df1, char_vec))
 as.numeric(pull(df1, fact_vec))
 ```
-I happened to use numbers for my character vector, so they were converted to numbers. 
+My logical vector was converted to zeros and ones, whereas my character vector was converted to NAs "by coercion".
 
-However, my factors were characters and they did not convert to numbers.
+My factors were unassigned, so they were also NA.
 
+```{r conversions, eval = FALSE}
+prod(as.numeric(pull(df1, samp_pos)), pull(df1, samp))
+prod(as.factor(pull(df1, samp_pos)), pull(df1, samp))
+prod(as.numeric(as.factor(pull(df1, samp_pos))), pull(df1, samp))
+```
 
+# Problem 2
+
+Create a second dataframe.
+
+```{r}
+df2 = tibble(
+  x = rnorm(500),
+  y = rnorm(500),
+  gr_th1 = x + y > 1,
+  gr_th1_num = as.numeric(gr_th1),
+  gr_th1_fac = factor(gr_th1)
+)
+```
+
+The size of this dataframe is `r nrow(df2)` rows by `r ncol(df2)` columns.
+
+The mean of x is `r mean(pull(df2, x))`, the median of x is `r median(pull(df2, x))`, and
+
+the standard deviation of x is `r sd(pull(df2, x))`. The proportion of cases for which x + y > 1
+
+is `r sum(pull(df2, gr_th1))/500`.
+
+```{r}
+cols <- c("blue" = "x + y <= 1", "red" )
+
+ggplot(data = df2, 
+       aes(x, y,
+           color = ifelse(gr_th1 == TRUE, "blue", "red"),
+           manual_fill_)) +
+  geom_point(data = df2, aes(x, y)) +
+  theme(legend.position = "top", legend.title = element_blank())
+```
