@@ -27,8 +27,8 @@ Here's a dataframe.
 df1 = tibble(
   samp = rnorm(8),
   samp_pos = samp > 0,
-  char_vec = c("This", "is", "a", "column", "of", "length", "eight", "characters"),
-  fact_vec = factor(samp, levels = list("factor1", "factor2", "factor3")))
+  char_vec = c("This", "is", "a", "vector", "of", "length", "eight", "characters"),
+  fact_vec = factor(c("fac1", "fac2", "fac3", "fac4", "fac5", "fac6", "fac7", "fac8")))
 ```
 
 Take the mean of each vector:
@@ -76,14 +76,14 @@ The mean of x is `r mean(pull(df2, x))`, the median of x is `r median(pull(df2, 
 
 the standard deviation of x is `r sd(pull(df2, x))`. The proportion of cases for which x + y > 1
 
-is `r sum(pull(df2, gr_th1))/500`.
+is `r sum(pull(df2, gr_th1))` / 500`.
 
 ```{r}
 ggplot(data = df2,
-       aes(x = x, y = y, 
-       color = ifelse(gr_th1 == TRUE, "blue", "red"),
-       legend(legend = c("Sum not greater than 1", "Sum greater than 1")))) +
-  geom_point()
+       aes(x, y, color = gr_th1_fac)) +
+  geom_point() +
+  theme(legend.position = "top") +
+  labs(labels = c(TRUE = "Sum not greater than 1", FALSE = "Sum greater than 1"))
   
 
 
