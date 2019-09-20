@@ -27,7 +27,7 @@ Here's a dataframe.
 df1 = tibble(
   samp = rnorm(8),
   samp_pos = samp > 0,
-  char_vec = c("This", "is", "a", "vector", "of", "length", "eight", "characters"),
+  char_vec = c("This", "is", "a", "character", "vector", "of", "length", "eight"),
   fact_vec = factor(c("fac1", "fac2", "fac3", "fac4", "fac5", "fac6", "fac7", "fac8")))
 ```
 
@@ -42,25 +42,63 @@ The mean of a character vector doesn't make sense, `r mean(pull(df1, char_vec))`
 Neither does one for a factor, `r mean(pull(df1, fact_vec))`
 
 ```{r as.numeric, eval = FALSE}
-as.numeric(pull(df1, samp_pos))
-as.numeric(pull(df1, char_vec))
-as.numeric(pull(df1, fact_vec))
+pull(df1, samp_pos) %>% 
+  as.numeric()
+
+pull(df1, char_vec) %>% 
+  as.numeric()
+
+pull(df1, fact_vec) %>% 
+  as.numeric()
 ```
-My logical vector was converted to zeros and ones, whereas my character vector was converted to NAs "by coercion".
+My logical vector was converted to zeros and ones, 
 
-My factors were unassigned, so they were also NA.
+whereas my character vector was converted to NAs "by coercion".
 
-```{r conversions, eval = FALSE}
-prod(as.numeric(pull(df1, samp_pos)), pull(df1, samp))
-prod(as.factor(pull(df1, samp_pos)), pull(df1, samp))
-prod(as.numeric(as.factor(pull(df1, samp_pos))), pull(df1, samp))
+My factors were assigned number values from 1 to 8.
+
+```{r conversions}
+## This returns a zero, not sure why
+
+df1n <- df1 %>% 
+  mutate(
+    samp_pos = as.numeric(samp_pos))
+prod(
+  pull(df1n, samp_pos),
+  pull(df1n, samp))
+```
+
+```{r conversions 2, eval = FALSE}
+## This next one doesn't work because a factor can't be multiplied
+
+df1f <- df1 %>%
+  mutate(
+    samp_pos = as.factor(samp_pos))
+prod(
+  pull(df1f, samp_pos),
+  pull(df1f, samp))
+```
+
+```{r conversions 3}
+## The last one returns something more like what I expected, a random number
+
+df1fn <- df1 %>% 
+  mutate(
+    samp_pos = as.factor(samp_pos)) %>% 
+  mutate(
+    samp_pos = as.numeric(samp_pos))
+prod(
+  pull(df1fn, samp_pos), 
+  pull(df1fn, samp))
 ```
 
 # Problem 2
 
 Create a second dataframe.
 
-```{r}
+```{r create a second dataframe}
+set.seed(1)
+
 df2 = tibble(
   x = rnorm(500),
   y = rnorm(500),
@@ -76,9 +114,11 @@ The mean of x is `r mean(pull(df2, x))`, the median of x is `r median(pull(df2, 
 
 the standard deviation of x is `r sd(pull(df2, x))`. The proportion of cases for which x + y > 1
 
-is `r sum(pull(df2, gr_th1))` / 500`.
+is `r sum(pull(df2, gr_th1))` / 500.
 
-```{r Pipe, eval = FALSE}
+```{r Pipe, echo = FALSE, eval = FALSE}
+
+## I tried to create a dataframe with a decent legend
 
 df2_good <- df2 %>% 
   mutate(
@@ -91,22 +131,35 @@ with(df2_good,
 
 
 
-```{r ggplot}
-ggplot(data = df2,
+```{r ggplot logical}
+## This makes a plot using the logical vector to color points
+
+ggplot(df2,
+       aes(x, y, color = gr_th1)) +
+  geom_point()
+```
+
+```{r ggplot factor}
+## This makes a plot using the factor vector to color points
+
+ggplot(df2,
        aes(x, y, color = gr_th1_fac)) +
   geom_point()
-
 ```
 
 
+```{r ggplot numerical}
+## This makes a plot using the numerical vector to color points
 
-  labs(title = "Random Normal Samples", 
-       legend(x = "topleft", 
-              legend = ifelse(
-                pull(df2, gr_th1_fac) == TRUE, "Sum not greater than 1", "Sum greater than 1")))
+ggplot(df2,
+       aes(x, y, color = gr_th1_num)) +
+  geom_point()
+```
+
+The numerical and factor vectors came out as bicolor, and the numerical plot was a continuous scale. 
   
 
-```{r this plot works}
+```{r this plot works, echo = FALSE, eval = FALSE}
 with(df2, 
      plot(x, y))
 with(
