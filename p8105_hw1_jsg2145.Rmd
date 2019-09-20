@@ -17,7 +17,7 @@ This is my first homework assignment.
 
 This is the first problem of the problem set. Load the library.
 
-```{r load library}
+```{r load library, echo = FALSE}
 library(tidyverse)
 ```
 
@@ -136,7 +136,8 @@ with(df2_good,
 
 ggplot(df2,
        aes(x, y, color = gr_th1)) +
-  geom_point()
+  geom_point() +
+  ggsave("hw1_plot.pdf")
 ```
 
 ```{r ggplot factor}
@@ -170,3 +171,5 @@ with(
   points(x, y, col = 'blue'))
 legend("bottomleft", pch= 1, col=c("blue","red"), legend=c("Sum not greater than 1","Sum greater than 1"))
 ```
+
+
